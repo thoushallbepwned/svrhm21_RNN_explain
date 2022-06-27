@@ -232,14 +232,14 @@ if __name__ == '__main__':
     ker_size = 5 # in Conv layer 1
     b_h = 0 # bias modulation flag
     g_h = 1 # gain modulation flag
-    l_h = 0 # lateral interactions flag %Im guessing that we can cut all the lateral connections just by doing this
+    l_h = 1 # lateral interactions flag %Im guessing that we can cut all the lateral connections just by doing this
     t_h = 1 # top-down interactions flag
 
     net_num = 5 # to train multiple networks - id of current network
 
-    batch_size = 32
-    n_iter = 300000
-    lrh = 0.0001
+    batch_size = 16
+    n_iter = 30000
+    lrh = 0.0005
     t_steps = 4 # number of timesteps
 
     net_save_str = 'rnn_bglt_'+str(b_h)+str(g_h)+str(l_h)+str(t_h)+'_t_'+str(t_steps)+'_num_'+str(net_num)
@@ -254,6 +254,7 @@ if __name__ == '__main__':
     net.apply(weights_init)
     net = net.float()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("this is the device we are running one", device)
     net.to(device)
 
     # Gradient clipping at every parameter by registering hooks - the hook is called everytime a gradient is computed (https://pytorch.org/docs/stable/autograd.html)
@@ -321,7 +322,7 @@ if __name__ == '__main__':
             net.train()
 
         if i % 1000 == 999:
-            np.savez('loss_'+net_save_str+'.npz', train_loss=train_loss, val_loss=val_loss)
+            np.savez('loss_'+net_save_str+'.npz')#, train_loss=train_loss, val_loss=val_loss)
 
         if i % 10000 == 9999:
             torch.save(net.state_dict(), net_save_str+'.pth')
