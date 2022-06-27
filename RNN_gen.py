@@ -19,10 +19,17 @@ from scipy.ndimage.interpolation import rotate
 from random import shuffle
 from sklearn import svm
 from scipy import ndimage
-
+#import tensorflow_datasets as tfds
+#print(tf.__version__)
 from tensorflow.examples.tutorials.mnist import input_data
+#mnist = tf.keras.datasets.mnist
+#fmnist = tf.keras.datasets.fmnist
+
+#mnist = tfds.load(name ="mnist")#, split = tfds.Split.TRAIN)#input_data.read_data_sets('MNIST_data', one_hot=True)
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+#print("LOOKING FOR THIS", mnist)
 fmnist = input_data.read_data_sets('fMNIST_data', one_hot=True)
+#tfds.load(name ="fashion_mnist")#, split = tfds.Split.TRAIN)#input_data.read_data_sets('fMNIST_data', one_hot=True)
 
 ############################# FUNCTIONS DEFINED ##################################
 
@@ -225,7 +232,7 @@ if __name__ == '__main__':
     ker_size = 5 # in Conv layer 1
     b_h = 0 # bias modulation flag
     g_h = 1 # gain modulation flag
-    l_h = 1 # lateral interactions flag
+    l_h = 0 # lateral interactions flag %Im guessing that we can cut all the lateral connections just by doing this
     t_h = 1 # top-down interactions flag
 
     net_num = 5 # to train multiple networks - id of current network
@@ -250,7 +257,7 @@ if __name__ == '__main__':
     net.to(device)
 
     # Gradient clipping at every parameter by registering hooks - the hook is called everytime a gradient is computed (https://pytorch.org/docs/stable/autograd.html)
-    # To avaoid exploding gradients
+    # To avoid exploding gradients
     # for p in net.parameters():
     #     p.register_hook(lambda grad: torch.clamp(grad, -clip_value, clip_value))
 
