@@ -20,6 +20,7 @@ from random import shuffle
 from sklearn import svm
 from scipy import ndimage
 
+
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 fmnist = input_data.read_data_sets('fMNIST_data', one_hot=True)
@@ -271,7 +272,7 @@ if __name__ == '__main__':
     ker_size = 5 # in Conv layer 1
     b_h = 0 # bias modulation flag
     g_h = 1 # gain modulation flag
-    l_h = 1 # lateral interactions flag
+    l_h = 0 # lateral interactions flag
     t_h = 1 # top-down interactions flag
 
     net_num = 5 # id of current network
@@ -286,6 +287,7 @@ if __name__ == '__main__':
     net = net.float()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net.to(device)
+    print("We are currently running on:", device)
     print('Net created!')
 
     net.load_state_dict(torch.load(net_save_str+'.pth',map_location=torch.device('cpu')))
@@ -331,37 +333,37 @@ if __name__ == '__main__':
                     DataH = outputs[k][l].detach().numpy()
                     DataH = np.reshape(DataH,(100*n_mult,-1))
                     # Category - 400 samples train, 100 test
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     labels_t_h = torch.max(labels_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], labels_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:,:])
                     dec_accs[k][l][0][j][nrh] = np.mean(Predicted_lab==labels_t_h[80*n_mult:])
                     # Category domain
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     labels_t_h = torch.max(labels_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], (labels_t_h[:80*n_mult]>9)*1)
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:,:])
                     dec_accs[k][l][5][j][nrh] = np.mean(Predicted_lab==((labels_t_h[80*n_mult:]>9)*1))
                     # Pos_x
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     pos_x_t_h = torch.max(pos_x_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], pos_x_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
                     dec_accs[k][l][1][j][nrh] = np.mean(Predicted_lab==pos_x_t_h[80*n_mult:100*n_mult])
                     # Pos_y
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     pos_y_t_h = torch.max(pos_y_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], pos_y_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
                     dec_accs[k][l][2][j][nrh] = np.mean(Predicted_lab==pos_y_t_h[80*n_mult:100*n_mult])
                     # Size
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     size_t_h = torch.max(size_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], size_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
                     dec_accs[k][l][3][j][nrh] = np.mean(Predicted_lab==size_t_h[80*n_mult:100*n_mult])
                     # Rot
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     rot_t_h = torch.max(rot_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], rot_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
@@ -376,37 +378,37 @@ if __name__ == '__main__':
                     DataH = out_fbr_comb[j][k][l].detach().numpy()
                     DataH = np.reshape(DataH,(100*n_mult,-1))
                     # Category - 400 samples train, 100 test
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     labels_t_h = torch.max(labels_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], labels_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:,:])
                     fbr_accs_all_comb[j][l][k][0][nrh] = np.mean(Predicted_lab==labels_t_h[80*n_mult:])
                     # Category domain
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     labels_t_h = torch.max(labels_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], (labels_t_h[:80*n_mult]>9)*1)
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:,:])
                     fbr_accs_all_comb[j][l][k][5][nrh] = np.mean(Predicted_lab==((labels_t_h[80*n_mult:]>9)*1))
                     # Pos_x
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     pos_x_t_h = torch.max(pos_x_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], pos_x_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
                     fbr_accs_all_comb[j][l][k][1][nrh] = np.mean(Predicted_lab==pos_x_t_h[80*n_mult:100*n_mult])
                     # Pos_y
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     pos_y_t_h = torch.max(pos_y_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], pos_y_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
                     fbr_accs_all_comb[j][l][k][2][nrh] = np.mean(Predicted_lab==pos_y_t_h[80*n_mult:100*n_mult])
                     # Size
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     size_t_h = torch.max(size_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], size_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
                     fbr_accs_all_comb[j][l][k][3][nrh] = np.mean(Predicted_lab==size_t_h[80*n_mult:100*n_mult])
                     # Rot
-                    lin_clf_pos = svm.LinearSVC()
+                    lin_clf_pos = svm.LinearSVC(verbose = 0)
                     rot_t_h = torch.max(rot_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], rot_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:100*n_mult,:])
