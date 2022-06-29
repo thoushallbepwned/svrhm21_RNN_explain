@@ -476,7 +476,7 @@ if __name__ == '__main__':
     ker_size = 5 # in Conv layer 1
     b_h = 0 # bias/additive modulation flag
     g_h = 1 # gain/multiplicative modulation flag
-    l_h = 1 # lateral interactions flag
+    l_h = 0 # lateral interactions flag
     t_h = 1 # top-down interactions flag
 
     net_num = 5
@@ -486,8 +486,8 @@ if __name__ == '__main__':
     net_save_str = 'rnn_bglt_'+str(b_h)+str(g_h)+str(l_h)+str(t_h)+'_t_'+str(t_steps)+'_num_'+str(net_num)
     print(net_save_str)
 
-    n_ex = 1000
-    n_rep = 5
+    n_ex = 50
+    n_rep = 1
 
     net_all = RNNet_all_fbr(n_feats,ker_size,4,b_h,g_h,l_h,t_h)
     net_all = net_all.float()

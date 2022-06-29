@@ -275,7 +275,7 @@ if __name__ == '__main__':
     l_h = 0 # lateral interactions flag
     t_h = 1 # top-down interactions flag
 
-    net_num = 5 # id of current network
+    net_num = 1 # id of current network
 
     t_steps = 4 # number of timesteps
 
@@ -296,7 +296,7 @@ if __name__ == '__main__':
     device = torch.device("cpu")
     net.to(device)
 
-    n_reps_h = 10
+    n_reps_h = 1
 
     dec_accs = np.zeros([4,t_steps,6,2,n_reps_h]) # layers, timepoints, fact (cat,pos_x,pos_y,scale,orientation,domain), im (org,clean)
     out_accs = np.zeros([2,n_reps_h]) # timepoints, im (org,clean)
@@ -306,7 +306,7 @@ if __name__ == '__main__':
 
 ############################# Image generation ##################################
 
-        n_mult = 10
+        n_mult = 1
         inputs_t,inputs_t_c,labels_t,pos_x_t,pos_y_t,size_t,rot_t = gen_images(100*n_mult,2)
         inputs_t = torch.from_numpy(inputs_t).float()
         labels_t = torch.from_numpy(labels_t).float()
@@ -333,7 +333,7 @@ if __name__ == '__main__':
                     DataH = outputs[k][l].detach().numpy()
                     DataH = np.reshape(DataH,(100*n_mult,-1))
                     # Category - 400 samples train, 100 test
-                    lin_clf_pos = svm.LinearSVC(verbose = 0)
+                    lin_clf_pos = svm.LinearSVC(verbose = 1)
                     labels_t_h = torch.max(labels_t, 1)[1].numpy()
                     lin_clf_pos.fit(DataH[:80*n_mult,:], labels_t_h[:80*n_mult])
                     Predicted_lab = lin_clf_pos.predict(DataH[80*n_mult:,:])
